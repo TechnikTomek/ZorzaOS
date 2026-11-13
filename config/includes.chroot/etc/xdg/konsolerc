@@ -1,0 +1,8 @@
+[Desktop Entry]
+DefaultProfile=Zorza.profile
+
+[KonsoleWindow]
+ShowMenuBarByDefault=false
+
+[MainWindow]
+ToolBarsMovable=Disabled

@@ -1,0 +1,8 @@
+#!/bin/sh
+set -e
+apt-get -y autoremove --purge || true
+apt-get clean
+rm -rf /tmp/* /var/tmp/* 2>/dev/null || true
+# Indeks ikon i baza menu
+update-desktop-database -q /usr/share/applications 2>/dev/null || true
+fc-cache -f >/dev/null 2>&1 || true

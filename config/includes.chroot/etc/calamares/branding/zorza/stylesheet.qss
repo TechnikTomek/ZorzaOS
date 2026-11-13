@@ -1,0 +1,7 @@
+/* Zorza OS – styl instalatora */
+#mainApp { background: #F4F5FB; }
+#sidebarApp { background: #0E1530; }
+#logoApp { padding: 12px; }
+QPushButton { padding: 6px 16px; border-radius: 10px; }
+QProgressBar { border-radius: 6px; background: #E2E4F2; height: 10px; text-align: center; }
+QProgressBar::chunk { border-radius: 6px; background: #7C5CFF; }

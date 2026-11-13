@@ -1,0 +1,45 @@
+# --- KDE Plasma 6 ---
+kde-plasma-desktop
+plasma-workspace
+kwin-wayland
+kwin-x11
+sddm
+sddm-theme-breeze
+kde-config-sddm
+kde-config-plymouth
+plasma-nm
+plasma-pa
+plasma-disks
+plasma-firewall
+plasma-browser-integration
+plasma-systemmonitor
+kscreen
+powerdevil
+bluedevil
+kinfocenter
+systemsettings
+xdg-desktop-portal-kde
+kde-config-gtk-style
+breeze-gtk-theme
+kwalletmanager
+khelpcenter
+kmenuedit
+partitionmanager
+
+# Wygląd: ikony, kursory, fonty
+papirus-icon-theme
+breeze-cursor-theme
+fonts-inter
+fonts-inter-variable
+fonts-jetbrains-mono
+fonts-noto-core
+fonts-noto-color-emoji
+fonts-noto-cjk
+fonts-dejavu
+
+# Język polski
+hunspell-pl
+hyphen-pl
+mythes-pl
+qt6-translations-l10n
+manpages-pl

@@ -1,0 +1,36 @@
+---
+componentName:  zorza
+welcomeStyleCalamares: true
+welcomeExpandingLogo: true
+windowExpanding: normal
+windowSize: 1024px,680px
+windowPlacement: center
+sidebar: widget
+navigation: widget
+
+strings:
+    productName:         "Zorza OS"
+    shortProductName:    "Zorza"
+    version:             "1.0"
+    shortVersion:        "1.0"
+    versionedName:       "Zorza OS 1.0 (Świt)"
+    shortVersionedName:  "Zorza 1.0"
+    bootloaderEntryName: "Zorza OS"
+    productUrl:          "https://github.com/zorza-os/zorza-os"
+    supportUrl:          "https://github.com/zorza-os/zorza-os/discussions"
+    knownIssuesUrl:      "https://github.com/zorza-os/zorza-os/issues"
+    releaseNotesUrl:     "https://github.com/zorza-os/zorza-os/releases"
+
+images:
+    productLogo:         "logo.png"
+    productIcon:         "icon.png"
+    productWelcome:      "wordmark.png"
+
+slideshow:               "show.qml"
+slideshowAPI:            2
+
+style:
+   SidebarBackground:        "#0E1530"
+   SidebarText:              "#E6E8F5"
+   SidebarTextCurrent:       "#FFFFFF"
+   SidebarBackgroundCurrent: "#7C5CFF"

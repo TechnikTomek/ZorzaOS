@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Effects on/off
+Name[pl]=Efekty wł./wył.
+Comment=Toggle blur and animations (turn off without 3D acceleration)
+Comment[pl]=Przełącz rozmycie i animacje (wyłącz bez akceleracji 3D)
+Exec=sh -c 'msg=$(zorza-appearance effects toggle); notify-send -a "Zorza OS" -i preferences-desktop-effects "$msg"'
+Icon=preferences-desktop-effects
+Categories=Settings;DesktopSettings;
+Keywords=blur;animations;efekty;rozmycie;

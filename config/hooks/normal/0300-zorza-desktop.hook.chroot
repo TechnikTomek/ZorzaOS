@@ -1,0 +1,32 @@
+#!/bin/sh
+# Zorza OS – pulpit: Plymouth, Flathub, ikony, domyślne kolory KDE
+set -e
+
+# --- Plymouth -----------------------------------------------------------------
+plymouth-set-default-theme zorza || true
+mkdir -p /etc/plymouth
+printf '[Daemon]\nTheme=zorza\nShowDelay=0\nDeviceTimeout=8\n' > /etc/plymouth/plymouthd.conf
+
+# --- Flathub (plik .flatpakrepo pobierany przy budowaniu) ----------------------
+if [ -s /usr/share/zorza/flathub.flatpakrepo ]; then
+  flatpak remote-add --system --if-not-exists flathub /usr/share/zorza/flathub.flatpakrepo || true
+fi
+
+# --- Ikony: Papirus + foldery w kolorach akcentu Zorzy -------------------------
+python3 /usr/lib/zorza/make-icon-themes.py
+gtk-update-icon-cache -q -f /usr/share/icons/hicolor 2>/dev/null || true
+
+# --- Domyślne kolory KDE dla wszystkich (ciemny wariant) -----------------------
+python3 /usr/lib/zorza/make-kdeglobals.py /usr/share/color-schemes/ZorzaDark.colors /etc/xdg/kdeglobals
+
+# --- Usuwamy zbędne/zdublowane elementy --------------------------------------
+apt-get purge -y plasma-welcome kde-config-tablet 2>/dev/null || true
+rm -f /usr/share/applications/debian-uxterm.desktop /usr/share/applications/debian-xterm.desktop
+
+# --- Usługi -----------------------------------------------------------------
+systemctl enable NetworkManager.service || true
+systemctl enable sddm.service || true
+systemctl set-default graphical.target
+
+# Tapeta dynamiczna – timer użytkownika (działa tylko gdy wybrano „Horyzont dynamiczny”)
+systemctl --global enable zorza-dynamic-wallpaper.timer || true

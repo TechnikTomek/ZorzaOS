@@ -1,0 +1,64 @@
+# --- Aplikacje ---
+firefox-esr
+#if ARCHITECTURES amd64
+firefox-esr-l10n-pl
+#endif
+dolphin
+konsole
+kate
+kde-spectacle
+ark
+kcalc
+gwenview
+okular
+elisa
+vlc
+gimp
+inkscape
+libreoffice-writer
+libreoffice-calc
+libreoffice-impress
+libreoffice-draw
+libreoffice-kf6
+libreoffice-qt6
+libreoffice-l10n-pl
+libreoffice-help-pl
+libreoffice-style-colibre
+libreoffice-style-breeze
+
+# Sklep z aplikacjami + Flatpak
+plasma-discover
+plasma-discover-backend-flatpak
+plasma-discover-backend-fwupd
+flatpak
+packagekit
+
+# Aplikacje Zorza (Welcome, System Center): Python + Qt6/QML
+python3
+python3-pyside6.qtcore
+python3-pyside6.qtgui
+python3-pyside6.qtwidgets
+python3-pyside6.qtqml
+python3-pyside6.qtquick
+python3-pyside6.qtquickcontrols2
+python3-pyside6.qtsvg
+python3-psutil
+qml6-module-qtquick
+qml6-module-qtquick-controls
+qml6-module-qtquick-layouts
+qml6-module-qtquick-window
+qml6-module-qtquick-templates
+qml6-module-qtquick-effects
+qml6-module-qtquick-shapes
+qml6-module-qtquick-dialogs
+qml6-module-qtqml-workerscript
+qml6-module-qt5compat-graphicaleffects
+pkexec
+
+# Narzędzia pomocnicze dla aplikacji Zorza
+libnotify-bin
+kdialog
+pciutils
+usbutils
+lshw
+qt6-svg-plugins

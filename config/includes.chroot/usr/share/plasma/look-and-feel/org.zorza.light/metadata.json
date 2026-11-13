@@ -1,0 +1,16 @@
+{
+    "KPackageStructure": "Plasma/LookAndFeel",
+    "KPlugin": {
+        "Authors": [ { "Name": "Zorza OS" } ],
+        "Category": "",
+        "Description": "Global theme of Zorza OS – light variant",
+        "Description[pl]": "Motyw globalny Zorza OS – wariant jasny",
+        "Id": "org.zorza.light",
+        "License": "GPL-3.0-or-later",
+        "Name": "Zorza Light",
+        "Name[pl]": "Zorza Jasny",
+        "Version": "1.0",
+        "Website": "https://github.com/zorza-os/zorza-os"
+    },
+    "X-Plasma-APIVersion": "2"
+}

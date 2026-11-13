@@ -1,0 +1,82 @@
+#!/bin/sh
+# Zorza OS – konfiguracja sesji live (live-config). Działa wyłącznie przy
+# starcie z nośnika live; nic z tego nie trafia do zainstalowanego systemu.
+
+LIVE_USER="live"
+for p in $(cat /proc/cmdline); do
+  case "$p" in
+    username=*) LIVE_USER="${p#username=}" ;;
+  esac
+done
+HOME_DIR="/home/$LIVE_USER"
+
+SESSION="plasma"
+if grep -qw "zorza.safegraphics=1" /proc/cmdline; then
+  SESSION="plasmax11"
+fi
+
+# --- Automatyczne logowanie ---------------------------------------------------
+mkdir -p /etc/sddm.conf.d
+cat > /etc/sddm.conf.d/90-zorza-live.conf <<EOC
+[Autologin]
+User=$LIVE_USER
+Session=$SESSION
+Relogin=false
+EOC
+
+# --- Hasło "live" i sudo bez hasła (na wypadek gdyby live-config tego nie zrobił)
+if id "$LIVE_USER" >/dev/null 2>&1; then
+  echo "$LIVE_USER:live" | chpasswd
+  echo "$LIVE_USER ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/90-zorza-live
+  chmod 0440 /etc/sudoers.d/90-zorza-live
+  for g in sudo audio video netdev plugdev lpadmin vboxsf; do
+    getent group "$g" >/dev/null && adduser "$LIVE_USER" "$g" >/dev/null 2>&1 || true
+  done
+fi
+
+# --- Pulpit: skrót „Zainstaluj Zorza OS” ---------------------------------------
+mkdir -p "$HOME_DIR/Desktop" "$HOME_DIR/Pulpit" "$HOME_DIR/.config"
+DESK="$HOME_DIR/Desktop"
+grep -q "pl_PL" /proc/cmdline && DESK="$HOME_DIR/Pulpit" && rmdir "$HOME_DIR/Desktop" 2>/dev/null
+grep -q "pl_PL" /proc/cmdline || rmdir "$HOME_DIR/Pulpit" 2>/dev/null
+cp /usr/share/applications/zorza-install.desktop "$DESK/zorza-install.desktop"
+chmod +x "$DESK/zorza-install.desktop"
+cat > "$HOME_DIR/.config/user-dirs.dirs" <<EOC
+XDG_DESKTOP_DIR="$DESK"
+EOC
+
+# --- Portfel KDE wyłączony w sesji live (bez pytań o hasło portfela) ---------
+cat > "$HOME_DIR/.config/kwalletrc" <<EOC
+[Wallet]
+Enabled=false
+First Use=false
+EOC
+
+# --- Wygaszacz/blokada ekranu wyłączone w sesji live ---------------------------
+cat > "$HOME_DIR/.config/kscreenlockerrc" <<EOC
+[Daemon]
+Autolock=false
+LockOnResume=false
+EOC
+
+# --- Bez przyciemniania i usypiania ekranu w sesji live -----------------------
+: > "$HOME_DIR/.config/powerdevilrc"
+for prof in AC Battery LowBattery; do
+  cat >> "$HOME_DIR/.config/powerdevilrc" <<EOC
+[$prof][Display]
+DimDisplayWhenIdle=false
+TurnOffDisplayWhenIdle=false
+
+[$prof][SuspendAndShutdown]
+AutoSuspendAction=0
+
+EOC
+done
+
+# --- Znacznik dla Welcome / System Center ---------------------------------------
+mkdir -p /run/zorza && touch /run/zorza/live-session
+
+chown -R "$LIVE_USER:$LIVE_USER" "$HOME_DIR" 2>/dev/null || true
+
+# Nie blokuj apt automatycznymi aktualizacjami w sesji live
+systemctl mask apt-daily.timer apt-daily-upgrade.timer >/dev/null 2>&1 || true

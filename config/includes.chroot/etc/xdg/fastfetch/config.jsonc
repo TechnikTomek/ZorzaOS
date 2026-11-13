@@ -1,0 +1,30 @@
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+  "logo": {
+    "type": "file",
+    "source": "/usr/share/zorza/branding/zorza-ascii.txt",
+    "color": { "1": "97", "2": "38;2;47;212;196", "3": "38;2;124;92;255", "4": "38;2;180;110;230", "5": "38;2;255;111;163" },
+    "padding": { "top": 1, "left": 2, "right": 3 }
+  },
+  "display": {
+    "separator": "  ",
+    "color": { "keys": "38;2;124;92;255", "title": "38;2;255;111;163" }
+  },
+  "modules": [
+    "title",
+    { "type": "custom", "format": "\u001b[38;2;47;212;196m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\u001b[0m" },
+    { "type": "os", "key": "System" },
+    { "type": "kernel", "key": "Jądro" },
+    { "type": "uptime", "key": "Czas pracy" },
+    { "type": "packages", "key": "Pakiety" },
+    { "type": "de", "key": "Pulpit" },
+    { "type": "wm", "key": "Okna" },
+    { "type": "terminal", "key": "Terminal" },
+    { "type": "cpu", "key": "Procesor" },
+    { "type": "gpu", "key": "Grafika" },
+    { "type": "memory", "key": "Pamięć" },
+    { "type": "disk", "key": "Dysk" },
+    "break",
+    "colors"
+  ]
+}

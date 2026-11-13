@@ -1,0 +1,9 @@
+module Zorza
+singleton Style 1.0 Style.qml
+Card 1.0 Card.qml
+ZButton 1.0 ZButton.qml
+ZSwitch 1.0 ZSwitch.qml
+AccentPicker 1.0 AccentPicker.qml
+WallpaperGrid 1.0 WallpaperGrid.qml
+ThemePicker 1.0 ThemePicker.qml
+Heading 1.0 Heading.qml

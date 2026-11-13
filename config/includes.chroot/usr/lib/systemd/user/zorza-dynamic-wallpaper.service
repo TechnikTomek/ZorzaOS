@@ -1,0 +1,7 @@
+[Unit]
+Description=Zorza OS – tapeta dynamiczna (pora dnia)
+PartOf=graphical-session.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/zorza-dynamic-wallpaper

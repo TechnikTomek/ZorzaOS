@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Zorza session init
+Exec=/usr/lib/zorza/session-init.sh
+NoDisplay=true
+OnlyShowIn=KDE;
+X-KDE-autostart-phase=2

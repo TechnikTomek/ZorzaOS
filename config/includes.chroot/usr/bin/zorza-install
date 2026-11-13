@@ -1,0 +1,15 @@
+#!/bin/sh
+# Uruchamia instalator Calamares z uprawnieniami roota w bieżącej sesji
+# graficznej (Wayland lub X11).
+if [ ! -e /run/zorza/live-session ] && [ ! -d /run/live/medium ]; then
+  kdialog --title "Zorza OS" --sorry "Instalator działa tylko w sesji live (z pendrive'a / płyty)." 2>/dev/null
+  exit 1
+fi
+if [ -n "$DISPLAY" ] && command -v xhost >/dev/null; then
+  xhost +si:localuser:root >/dev/null 2>&1 || true
+fi
+exec sudo -E env \
+  XDG_RUNTIME_DIR="$XDG_RUNTIME_DIR" WAYLAND_DISPLAY="$WAYLAND_DISPLAY" DISPLAY="$DISPLAY" \
+  QT_QPA_PLATFORM="${WAYLAND_DISPLAY:+wayland;}xcb" KDE_FULL_SESSION=true \
+  XDG_CURRENT_DESKTOP=KDE QT_QPA_PLATFORMTHEME=kde \
+  calamares "$@"

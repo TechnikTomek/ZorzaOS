@@ -1,0 +1,115 @@
+// Zorza OS – ekran startowy Plymouth
+sw = Window.GetWidth();
+sh = Window.GetHeight();
+
+Window.SetBackgroundTopColor(0.055, 0.082, 0.19);
+Window.SetBackgroundBottomColor(0.035, 0.05, 0.12);
+
+bg_image = Image("background.png");
+bg = Sprite(bg_image.Scale(sw, sh));
+bg.SetZ(-100);
+
+glow_image = Image("glow.png");
+glow = Sprite(glow_image);
+glow.SetX(sw / 2 - glow_image.GetWidth() / 2);
+glow.SetY(sh / 2 - glow_image.GetHeight() / 2 - 40);
+glow.SetZ(1);
+
+logo_image = Image("logo.png");
+logo = Sprite(logo_image);
+logo.SetX(sw / 2 - logo_image.GetWidth() / 2);
+logo.SetY(sh / 2 - logo_image.GetHeight() / 2 - 40);
+logo.SetZ(2);
+
+word_image = Image("wordmark.png");
+word = Sprite(word_image);
+word.SetX(sw / 2 - word_image.GetWidth() / 2);
+word.SetY(sh / 2 + logo_image.GetHeight() / 2);
+word.SetZ(2);
+word.SetOpacity(0.0);
+
+// Kropki postępu
+NDOTS = 5;
+dot_img = Image("dot.png");
+acc_img = Image("dot-accent.png");
+spacing = 26;
+base_x = sw / 2 - (NDOTS - 1) * spacing / 2 - dot_img.GetWidth() / 2;
+base_y = sh / 2 + logo_image.GetHeight() / 2 + 110;
+for (i = 0; i < NDOTS; i++) {
+    dots[i] = Sprite(dot_img);
+    dots[i].SetX(base_x + i * spacing);
+    dots[i].SetY(base_y);
+    dots[i].SetZ(3);
+    dots[i].SetOpacity(0.25);
+}
+accent = Sprite(acc_img);
+accent.SetZ(4);
+accent.SetY(base_y);
+
+t = 0;
+fun refresh_callback() {
+    t++;
+    // pulsująca poświata
+    glow.SetOpacity(0.55 + 0.35 * Math.Sin(t / 30));
+    // płynne pojawianie się napisu
+    if (t < 60) word.SetOpacity(t / 60); else word.SetOpacity(1);
+    // wędrująca kropka akcentu
+    pos = (t / 12) % NDOTS;
+    p = Math.Int(pos);
+    accent.SetX(base_x + p * spacing);
+    for (i = 0; i < NDOTS; i++) {
+        if (i == p) dots[i].SetOpacity(0.0); else dots[i].SetOpacity(0.3);
+    }
+}
+Plymouth.SetRefreshFunction(refresh_callback);
+
+// --- Hasło (szyfrowanie dysku) ---------------------------------------------
+entry_img = Image("entry.png");
+bullet_img = Image("bullet.png");
+entry = Sprite(entry_img);
+entry.SetX(sw / 2 - entry_img.GetWidth() / 2);
+entry.SetY(base_y + 40);
+entry.SetZ(10);
+entry.SetOpacity(0);
+prompt = Sprite();
+prompt.SetZ(10);
+nb_created = 0;
+
+fun display_password_callback(prompt_text, nbullets) {
+    entry.SetOpacity(1);
+    pi = Image.Text(prompt_text, 0.9, 0.91, 0.96, 1, "Inter 12");
+    prompt.SetImage(pi);
+    prompt.SetX(sw / 2 - pi.GetWidth() / 2);
+    prompt.SetY(base_y + 40 - pi.GetHeight() - 10);
+    prompt.SetOpacity(1);
+    for (i = 0; i < nb_created; i++) bullets[i].SetOpacity(0);
+    for (i = 0; i < nbullets && i < 20; i++) {
+        if (i >= nb_created) { bullets[i] = Sprite(bullet_img); bullets[i].SetZ(11); nb_created = i + 1; }
+        bullets[i].SetX(sw / 2 - entry_img.GetWidth() / 2 + 16 + i * 14);
+        bullets[i].SetY(base_y + 40 + entry_img.GetHeight() / 2 - 7);
+        bullets[i].SetOpacity(1);
+    }
+}
+fun display_normal_callback() {
+    entry.SetOpacity(0);
+    prompt.SetOpacity(0);
+    for (i = 0; i < nb_created; i++) bullets[i].SetOpacity(0);
+}
+Plymouth.SetDisplayPasswordFunction(display_password_callback);
+Plymouth.SetDisplayNormalFunction(display_normal_callback);
+
+// --- Komunikaty --------------------------------------------------------------
+msg = Sprite();
+msg.SetZ(10);
+fun message_callback(text) {
+    mi = Image.Text(text, 0.7, 0.72, 0.85, 1, "Inter 10");
+    msg.SetImage(mi);
+    msg.SetX(sw / 2 - mi.GetWidth() / 2);
+    msg.SetY(sh - 60);
+}
+Plymouth.SetMessageFunction(message_callback);
+
+fun quit_callback() {
+    logo.SetOpacity(0);
+}
+Plymouth.SetQuitFunction(quit_callback);

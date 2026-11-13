@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Install Zorza OS
+Name[pl]=Zainstaluj Zorza OS
+GenericName=System installer
+GenericName[pl]=Instalator systemu
+Comment=Install Zorza OS on this computer's disk
+Comment[pl]=Zainstaluj Zorza OS na dysku tego komputera
+Exec=zorza-install
+Icon=zorza
+Terminal=false
+Categories=System;
+Keywords=calamares;installer;instalator;

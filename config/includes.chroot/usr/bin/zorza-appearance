@@ -1,0 +1,142 @@
+#!/bin/bash
+# =============================================================================
+#  zorza-appearance – zmiana wyglądu Zorza OS z linii poleceń
+#
+#    zorza-appearance theme   dark|light
+#    zorza-appearance accent  violet|pink|gold|teal|blue|green
+#    zorza-appearance wallpaper <Nazwa>|<ścieżka>|dynamic
+#    zorza-appearance effects on|off|toggle|auto
+#    zorza-appearance status
+#
+#  Ustawienia zapisywane są w ~/.config/zorzarc.
+# =============================================================================
+set -u
+KW=kwriteconfig6; KR=kreadconfig6
+command -v $KW >/dev/null || { KW=kwriteconfig5; KR=kreadconfig5; }
+RC=zorzarc
+
+get() { $KR --file $RC --group General --key "$1" --default "$2"; }
+set_() { $KW --file $RC --group General --key "$1" "$2"; }
+
+declare -A ACCENTS=( [violet]="#7C5CFF" [pink]="#FF6FA3" [gold]="#FFB547" [teal]="#2FD4C4" [blue]="#4C8DFF" [green]="#3DDC84" )
+
+kwin_reconfigure() {
+  dbus-send --session --type=method_call --dest=org.kde.KWin /KWin org.kde.KWin.reconfigure >/dev/null 2>&1 || true
+}
+
+icons_changed() {
+  for p in /usr/lib/*/libexec/plasma-changeicons /usr/libexec/plasma-changeicons; do
+    if [ -x "$p" ]; then "$p" "$1" >/dev/null 2>&1 && return 0; fi
+  done
+  $KW --file kdeglobals --group Icons --key Theme "$1"
+  dbus-send --session --type=signal /KIconLoader org.kde.KIconLoader.iconChanged int32:0 >/dev/null 2>&1 || true
+}
+
+apply_icons() {
+  local dark acc suffix variant
+  dark="$(get Dark true)"; acc="$(get Accent violet)"
+  suffix=""; [ "$acc" != violet ] && suffix="-$acc"
+  variant=Light; [ "$dark" = true ] && variant=Dark
+  icons_changed "Zorza-$variant$suffix"
+}
+
+apply_accent() {
+  local acc="$1" hex="${ACCENTS[$1]:-}"
+  [ -n "$hex" ] || { echo "Nieznany akcent: $acc (dostępne: ${!ACCENTS[*]})"; return 1; }
+  set_ Accent "$acc"
+  plasma-apply-colorscheme --accent-color "$hex" >/dev/null 2>&1 || \
+    $KW --file kdeglobals --group General --key AccentColor "$hex"
+  apply_icons
+}
+
+apply_theme() {
+  local mode="$1" lnf scheme
+  case "$mode" in
+    dark)  lnf=org.zorza.dark;  scheme=ZorzaDark;  set_ Dark true ;;
+    light) lnf=org.zorza.light; scheme=ZorzaLight; set_ Dark false ;;
+    *) echo "Użycie: theme dark|light"; return 1 ;;
+  esac
+  plasma-apply-lookandfeel -a "$lnf" >/dev/null 2>&1 || true
+  plasma-apply-colorscheme "$scheme" >/dev/null 2>&1 || true
+  $KW --file ksplashrc --group KSplash --key Theme "$lnf"
+  $KW --file kdeglobals --group KDE --key LookAndFeelPackage "$lnf"
+  apply_accent "$(get Accent violet)"
+  # Tapeta podąża za motywem, chyba że użytkownik wybrał własną
+  local wp; wp="$(get Wallpaper auto)"
+  if [ "$wp" = auto ]; then
+    if [ "$mode" = dark ]; then apply_wallpaper_raw /usr/share/wallpapers/Zorza; else apply_wallpaper_raw /usr/share/wallpapers/Mgla; fi
+  fi
+}
+
+apply_wallpaper_raw() {
+  local p="$1"
+  if [ -d "$p" ]; then
+    p="$(ls -1 "$p"/contents/images/*.* 2>/dev/null | sort -V | tail -n1)"
+  fi
+  [ -f "$p" ] || { echo "Brak pliku tapety: $1"; return 1; }
+  plasma-apply-wallpaperimage "$p" >/dev/null 2>&1 || true
+  $KW --file kscreenlockerrc --group Greeter --group Wallpaper --group org.kde.image --group General --key Image "file://$p"
+}
+
+apply_wallpaper() {
+  local w="$1"
+  if [ "$w" = dynamic ]; then
+    set_ Wallpaper dynamic
+    systemctl --user enable --now zorza-dynamic-wallpaper.timer >/dev/null 2>&1 || true
+    /usr/bin/zorza-dynamic-wallpaper --force
+    return
+  fi
+  if [ -d "/usr/share/wallpapers/$w" ]; then
+    set_ Wallpaper "$w"; apply_wallpaper_raw "/usr/share/wallpapers/$w"
+  else
+    set_ Wallpaper "$w"; apply_wallpaper_raw "$w"
+  fi
+}
+
+gpu_is_software() {
+  local info
+  info="$(dbus-send --session --print-reply --dest=org.kde.KWin /KWin org.kde.KWin.supportInformation 2>/dev/null)"
+  # Brak odpowiedzi KWin – zakładamy sprzęt z akceleracją
+  [ -n "$info" ] || return 1
+  echo "$info" | grep -qiE "llvmpipe|softpipe|swrast|Compositing Type: QPainter|Compositing is not possible" && return 0
+  echo "$info" | grep -qi "OpenGL renderer string" || return 0
+  return 1
+}
+
+apply_effects() {
+  local mode="$1" on
+  case "$mode" in
+    on) on=true ;;
+    off) on=false ;;
+    toggle) [ "$(get Effects true)" = true ] && on=false || on=true ;;
+    auto) if gpu_is_software; then on=false; else on=true; fi ;;
+    *) echo "Użycie: effects on|off|toggle|auto"; return 1 ;;
+  esac
+  set_ Effects "$on"
+  for p in blurEnabled contrastEnabled slidingpopupsEnabled scaleEnabled dimscreenEnabled fadingpopupsEnabled; do
+    $KW --file kwinrc --group Plugins --key "$p" "$on"
+  done
+  if [ "$on" = true ]; then
+    $KW --file kdeglobals --group KDE --key AnimationDurationFactor 0.7071
+  else
+    $KW --file kdeglobals --group KDE --key AnimationDurationFactor 0
+  fi
+  kwin_reconfigure
+  echo "Efekty: $on"
+}
+
+status() {
+  echo "Motyw:   $( [ "$(get Dark true)" = true ] && echo ciemny || echo jasny )"
+  echo "Akcent:  $(get Accent violet)"
+  echo "Tapeta:  $(get Wallpaper auto)"
+  echo "Efekty:  $(get Effects true)"
+}
+
+case "${1:-}" in
+  theme)     apply_theme "${2:-dark}" ;;
+  accent)    apply_accent "${2:-violet}" ;;
+  wallpaper) apply_wallpaper "${2:?podaj nazwę tapety}" ;;
+  effects)   apply_effects "${2:-toggle}" ;;
+  status)    status ;;
+  *) sed -n '3,12p' "$0"; exit 1 ;;
+esac

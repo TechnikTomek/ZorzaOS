@@ -1,0 +1,20 @@
+#!/bin/sh
+# Zorza OS – dodatki gościa VirtualBox z Debian fasttrack (schowek,
+# przeciągnij-upuść, foldery współdzielone, dopasowanie rozdzielczości w X11).
+set -e
+ARCH="$(dpkg --print-architecture)"
+[ "$ARCH" = amd64 ] || { echo "VirtualBox guest utils: pomijam na $ARCH"; exit 0; }
+
+KEY=/usr/share/keyrings/fasttrack-archive-keyring.gpg
+[ -e "$KEY" ] || KEY="$(ls /usr/share/keyrings/*fasttrack* 2>/dev/null | head -n1)"
+cat > /etc/apt/sources.list.d/fasttrack.sources <<EOF
+Types: deb
+URIs: https://fasttrack.debian.net/debian-fasttrack/
+Suites: trixie-fasttrack trixie-backports-staging
+Components: main contrib
+Signed-By: $KEY
+EOF
+apt-get update
+if ! DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends virtualbox-guest-utils virtualbox-guest-x11; then
+  echo "UWAGA: nie udało się zainstalować dodatków VirtualBox – kontynuuję bez nich"
+fi

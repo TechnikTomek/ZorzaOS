@@ -1,0 +1,77 @@
+# --- System bazowy live ---
+live-boot
+live-config
+live-config-systemd
+user-setup
+sudo
+locales
+tzdata
+console-setup
+keyboard-configuration
+systemd-timesyncd
+network-manager
+bluez
+pipewire-audio
+wireplumber
+plymouth
+plymouth-themes
+firmware-linux-free
+firmware-misc-nonfree
+firmware-realtek
+firmware-iwlwifi
+firmware-atheros
+firmware-amd-graphics
+firmware-intel-graphics
+firmware-intel-sound
+firmware-intel-misc
+firmware-sof-signed
+firmware-brcm80211
+firmware-mediatek
+firmware-libertas
+firmware-bnx2
+firmware-bnx2x
+firmware-cirrus
+#if ARCHITECTURES amd64
+intel-microcode
+amd64-microcode
+#endif
+ca-certificates
+curl
+wget
+rsync
+nano
+vim-tiny
+htop
+fastfetch
+bash-completion
+command-not-found
+unzip
+p7zip-full
+dosfstools
+ntfs-3g
+exfatprogs
+cryptsetup
+lvm2
+btrfs-progs
+efibootmgr
+os-prober
+
+# Wirtualizacja: VMSVGA (vmwgfx), virtio, QEMU/SPICE
+spice-vdagent
+qemu-guest-agent
+open-vm-tools
+xserver-xorg-video-qxl
+
+# Bootloadery dla instalatora (Calamares)
+#if ARCHITECTURES amd64
+xserver-xorg-video-vmware
+grub-pc-bin
+grub-efi-amd64
+grub-efi-amd64-signed
+shim-signed
+fasttrack-archive-keyring
+#endif
+#if ARCHITECTURES arm64
+grub-efi-arm64
+grub-efi-arm64-bin
+#endif

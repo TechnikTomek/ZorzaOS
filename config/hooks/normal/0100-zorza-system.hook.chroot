@@ -1,0 +1,69 @@
+#!/bin/sh
+# Zorza OS – tożsamość systemu, język, strefa czasowa, klawiatura
+set -e
+. /etc/zorza-release.conf
+
+# --- Języki: polski (domyślny) i angielski -----------------------------------
+sed -i -e 's/^# *\(pl_PL.UTF-8 UTF-8\)/\1/' -e 's/^# *\(en_US.UTF-8 UTF-8\)/\1/' /etc/locale.gen
+grep -q '^pl_PL.UTF-8' /etc/locale.gen || echo 'pl_PL.UTF-8 UTF-8' >> /etc/locale.gen
+grep -q '^en_US.UTF-8' /etc/locale.gen || echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen
+locale-gen
+update-locale LANG=pl_PL.UTF-8
+
+# --- Strefa czasowa ----------------------------------------------------------
+ln -sf /usr/share/zoneinfo/Europe/Warsaw /etc/localtime
+echo "Europe/Warsaw" > /etc/timezone
+
+# --- Klawiatura PL -----------------------------------------------------------
+cat > /etc/default/keyboard <<EOF
+XKBMODEL="pc105"
+XKBLAYOUT="pl"
+XKBVARIANT=""
+XKBOPTIONS=""
+BACKSPACE="guess"
+EOF
+
+# --- /etc/os-release (dywersja, aby aktualizacja base-files jej nie nadpisała) --
+if [ ! -e /usr/lib/os-release.debian ]; then
+  dpkg-divert --local --rename --divert /usr/lib/os-release.debian --add /usr/lib/os-release
+fi
+cat > /usr/lib/os-release <<EOF
+PRETTY_NAME="$ZORZA_NAME $ZORZA_VERSION ($ZORZA_CODENAME_PRETTY)"
+NAME="$ZORZA_NAME"
+VERSION_ID="$ZORZA_VERSION"
+VERSION="$ZORZA_VERSION ($ZORZA_CODENAME_PRETTY)"
+VERSION_CODENAME=$ZORZA_CODENAME
+DEBIAN_CODENAME=$ZORZA_DEBIAN_SUITE
+ID=$ZORZA_ID
+ID_LIKE=debian
+HOME_URL="$ZORZA_HOME_URL"
+SUPPORT_URL="$ZORZA_HOME_URL/discussions"
+BUG_REPORT_URL="$ZORZA_HOME_URL/issues"
+LOGO=zorza-logo
+ANSI_COLOR="38;2;124;92;255"
+EOF
+ln -sf ../usr/lib/os-release /etc/os-release
+
+cat > /etc/lsb-release <<EOF
+DISTRIB_ID=Zorza
+DISTRIB_RELEASE=$ZORZA_VERSION
+DISTRIB_CODENAME=$ZORZA_CODENAME
+DISTRIB_DESCRIPTION="$ZORZA_NAME $ZORZA_VERSION ($ZORZA_CODENAME_PRETTY)"
+EOF
+
+printf '%s %s (%s) \\n \\l\n\n' "$ZORZA_NAME" "$ZORZA_VERSION" "$ZORZA_CODENAME_PRETTY" > /etc/issue
+printf '%s %s\n' "$ZORZA_NAME" "$ZORZA_VERSION" > /etc/issue.net
+
+# --- GRUB zainstalowanego systemu --------------------------------------------
+mkdir -p /etc/default/grub.d
+cat > /etc/default/grub.d/50-zorza.cfg <<EOF
+GRUB_DISTRIBUTOR="$ZORZA_NAME"
+GRUB_TIMEOUT=3
+GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"
+GRUB_GFXMODE=1920x1080,1280x800,auto
+GRUB_THEME=/usr/share/grub/themes/zorza/theme.txt
+EOF
+
+# --- Nazwa hosta i drobiazgi ---------------------------------------------------
+echo zorza > /etc/hostname
+update-alternatives --set x-www-browser /usr/bin/firefox-esr 2>/dev/null || true

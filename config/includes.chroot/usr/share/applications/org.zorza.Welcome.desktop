@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Welcome to Zorza OS
+Name[pl]=Witaj w Zorza OS
+Comment=Set up theme, accent colour and wallpaper
+Comment[pl]=Ustaw motyw, kolor akcentu i tapetę
+Exec=zorza-welcome
+Icon=zorza
+Categories=System;Settings;
+Keywords=welcome;witaj;theme;motyw;

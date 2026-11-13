@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 400" width="1400" height="400">
+  <defs>
+    <linearGradient id="wm" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#2FD4C4"/>
+      <stop offset="0.45" stop-color="#7C5CFF"/>
+      <stop offset="1" stop-color="#FF6FA3"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(20,44) scale(0.61)">
+    <g fill="none" stroke="url(#wm)" stroke-linecap="round">
+      <path d="M104 262 C 150 120, 362 120, 408 262" stroke-width="24"/>
+      <path d="M140 270 C 176 178, 336 178, 372 270" stroke-width="19" opacity="0.8"/>
+      <path d="M176 276 C 200 226, 312 226, 336 276" stroke-width="15" opacity="0.6"/>
+    </g>
+    <path d="M198 318 A58 58 0 0 1 314 318 Z" fill="#FFB547"/>
+    <rect x="88" y="314" width="336" height="12" rx="6" fill="#F4F5FB"/>
+  </g>
+  <text x="370" y="262" font-family="Inter, 'Inter Display', sans-serif" font-weight="700" font-size="200" letter-spacing="-6" fill="#F4F5FB">zorza</text>
+  <text x="1040" y="262" font-family="Inter, sans-serif" font-weight="300" font-size="200" fill="url(#wm)">os</text>
+</svg>

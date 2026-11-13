@@ -1,0 +1,5 @@
+#!/usr/bin/python3
+import sys
+sys.path.insert(0, "/usr/lib/zorza/python")
+from zorza_app import run
+run("system-center", "System Center", "org.zorza.SystemCenter")

@@ -1,0 +1,9 @@
+[Unit]
+Description=Zorza OS – sprawdzanie pory dnia dla tapety dynamicznej
+
+[Timer]
+OnStartupSec=30s
+OnUnitActiveSec=10min
+
+[Install]
+WantedBy=timers.target

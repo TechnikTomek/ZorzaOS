@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=System Center
+Name[pl]=System Center
+GenericName=System information and appearance
+GenericName[pl]=Informacje o systemie i wygląd
+Comment=Hardware info, theme, accent, wallpapers and one-click updates
+Comment[pl]=Sprzęt, motyw, akcent, tapety i aktualizacje jednym kliknięciem
+Exec=zorza-system-center
+Icon=zorza
+Categories=System;Settings;
+Keywords=updates;aktualizacje;theme;motyw;hardware;sprzęt;

@@ -1,0 +1,15 @@
+[SddmGreeterTheme]
+Name=Zorza
+Description=Zorza OS login screen
+Author=Zorza OS
+License=GPL-3.0-or-later
+Type=sddm-theme
+Version=1.0
+Website=https://github.com/zorza-os/zorza-os
+Screenshot=background.jpg
+MainScript=Main.qml
+ConfigFile=theme.conf
+TranslationsDirectory=translations
+Theme-Id=zorza
+Theme-API=2.0
+QtVersion=6

@@ -1,0 +1,20 @@
+{
+  "name": "Zorza",
+  "night":    "#0E1530",
+  "deep":     "#1B2350",
+  "dusk":     "#2B2F6B",
+  "violet":   "#7C5CFF",
+  "pink":     "#FF6FA3",
+  "gold":     "#FFB547",
+  "teal":     "#2FD4C4",
+  "mist":     "#F4F5FB",
+  "ink":      "#161A2E",
+  "accents": {
+    "violet": "#7C5CFF",
+    "pink":   "#FF6FA3",
+    "gold":   "#FFB547",
+    "teal":   "#2FD4C4",
+    "blue":   "#4C8DFF",
+    "green":  "#3DDC84"
+  }
+}

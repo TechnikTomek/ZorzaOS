@@ -1,0 +1,17 @@
+#!/bin/bash
+# Tapeta dynamiczna „Horyzont”: 4 pory dnia wg lokalnego zegara.
+KR=kreadconfig6; KW=kwriteconfig6
+[ "$($KR --file zorzarc --group General --key Wallpaper --default auto)" = dynamic ] || [ "${1:-}" = --force ] || exit 0
+h=$((10#$(date +%H)))
+m=$((10#$(date +%m)))
+# Proste przybliżenie dla Europy Środkowej: dłuższy dzień latem
+if [ $m -ge 4 ] && [ $m -le 9 ]; then sunrise=5; sunset=20; else sunrise=7; sunset=16; fi
+if   [ $h -ge $sunrise ] && [ $h -lt $((sunrise+2)) ]; then phase=swit
+elif [ $h -ge $((sunrise+2)) ] && [ $h -lt $sunset ]; then phase=dzien
+elif [ $h -ge $sunset ] && [ $h -lt $((sunset+2)) ]; then phase=zmierzch
+else phase=noc; fi
+last="$($KR --file zorzarc --group Dynamic --key Phase --default none)"
+if [ "$phase" != "$last" ] || [ "${1:-}" = --force ]; then
+  img=/usr/share/wallpapers/Horyzont/phases/$phase.png
+  plasma-apply-wallpaperimage "$img" >/dev/null 2>&1 && $KW --file zorzarc --group Dynamic --key Phase "$phase"
+fi
