@@ -107,7 +107,7 @@ z opcją instalacji na dysk i powstaje z jednego skryptu dla dwóch architektur.
 
 ## 🚀 Szybki start
 
-**Pobierz** gotowy obraz z zakładki [Releases](https://github.com/zorza-os/zorza-os/releases) albo **zbuduj go sam**.
+**Pobierz** gotowy obraz z zakładki [Releases](https://github.com/TechnikTOmek/zorza-os/releases) albo **zbuduj go sam**.
 Potrzebujesz tylko Dockera (Linux, macOS, WSL2 na Windows):
 
 ```bash
